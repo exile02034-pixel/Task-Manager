@@ -7,13 +7,30 @@ export default function TaskItem({ task, onToggle, onEdit, onDelete }) {
   const [description, setDescription] = useState(task.description);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [editError, setEditError] = useState('');
 
   const handleSave = async () => {
-    if (!title.trim()) return;
+    if (!title.trim()) {
+      setEditError('Title is required');
+      return;
+    }
+
+    if (title.trim().length < 3) {
+      setEditError('Title should be more than 3 characters');
+      return;
+    }
+
+    setEditError('');
     setSaving(true);
     try {
-      await onEdit(task._id, { title: title.trim(), description: description.trim() });
+      await onEdit(task._id, {
+        title: title.trim(),
+        description: description.trim(),
+        isCompleted: task.isCompleted,
+      });
       setIsEditing(false);
+    } catch (err) {
+      setEditError(err.response?.data?.message || 'Failed to save task');
     } finally {
       setSaving(false);
     }
@@ -21,8 +38,16 @@ export default function TaskItem({ task, onToggle, onEdit, onDelete }) {
 
   const handleCancel = () => {
     setTitle(task.title);
-    setDescription(task.description);
+    setDescription(task.description || '');
+    setEditError('');
     setIsEditing(false);
+  };
+
+  const handleEdit = () => {
+    setTitle(task.title);
+    setDescription(task.description || '');
+    setEditError('');
+    setIsEditing(true);
   };
 
   return (
@@ -30,7 +55,7 @@ export default function TaskItem({ task, onToggle, onEdit, onDelete }) {
       <input
         type="checkbox"
         checked={task.isCompleted}
-        onChange={() => onToggle(task._id)}
+        onChange={(e) => onToggle(task._id, e.target.checked)}
       />
 
       {isEditing ? (
@@ -41,6 +66,7 @@ export default function TaskItem({ task, onToggle, onEdit, onDelete }) {
             onChange={(e) => setDescription(e.target.value)}
             maxLength={500}
           />
+          {editError && <p className="form-error">{editError}</p>}
           <div className="task-edit-actions">
             <button type="button" onClick={handleSave} disabled={saving}>
               {saving ? 'Saving...' : 'Save'}
@@ -55,7 +81,7 @@ export default function TaskItem({ task, onToggle, onEdit, onDelete }) {
           <h3>{task.title}</h3>
           {task.description && <p>{task.description}</p>}
           <div className="task-actions">
-            <button type="button" onClick={() => setIsEditing(true)}>
+            <button type="button" onClick={handleEdit}>
               Edit
             </button>
             <button type="button" onClick={() => setConfirmOpen(true)}>

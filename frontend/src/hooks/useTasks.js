@@ -35,12 +35,19 @@ export function useTasks() {
 
   const editTask = async (id, payload) => {
     const updated = await taskApi.updateTask(id, payload);
-    setTasks((prev) => prev.map((t) => (t._id === id ? updated : t)));
+    setTasks((prev) => prev.map((t) => (t._id === id ? { ...t, ...updated } : t)));
   };
 
-  const toggleTask = async (id) => {
-    const updated = await taskApi.toggleTask(id);
-    setTasks((prev) => prev.map((t) => (t._id === id ? updated : t)));
+  const toggleTask = async (id, isCompleted) => {
+    const updated = await taskApi.toggleTask(id, { isCompleted });
+    setTasks((prev) => {
+      const nextTasks = prev.map((t) => (t._id === id ? { ...t, ...updated } : t));
+
+      if (filter === 'active') return nextTasks.filter((t) => !t.isCompleted);
+      if (filter === 'completed') return nextTasks.filter((t) => t.isCompleted);
+
+      return nextTasks;
+    });
   };
 
   const removeTask = async (id) => {

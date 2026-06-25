@@ -19,8 +19,8 @@ export const updateTask = async (id, payload) => {
   return data.data;
 };
 
-export const toggleTask = async (id) => {
-  const { data } = await api.patch(`/tasks/${id}/toggle`);
+export const toggleTask = async (id, payload) => {
+  const { data } = await api.patch(`/tasks/${id}/toggle`, payload);
   return data.data;
 };
 

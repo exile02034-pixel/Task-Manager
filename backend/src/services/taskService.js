@@ -31,10 +31,10 @@ export const updateTask = async (id, { title, description }) => {
   return task;
 };
 
-export const toggleTask = async (id) => {
+export const toggleTask = async (id, { isCompleted } = {}) => {
   const task = await taskRepository.findById(id);
   if (!task) throw new ApiError(404, 'Task not found');
-  task.isCompleted = !task.isCompleted;
+  task.isCompleted = typeof isCompleted === 'boolean' ? isCompleted : !task.isCompleted;
   await task.save();
   return task;
 };
