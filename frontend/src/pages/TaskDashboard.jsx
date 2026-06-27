@@ -3,6 +3,9 @@ import TaskForm from '../components/taskForm.jsx';
 import SearchBar from '../components/searchBar.jsx';
 import FilterTabs from '../components/filterTabs.jsx';
 import TaskList from '../components/taskList.jsx';
+import Pagination from '../components/pagination.jsx';
+import UndoToast from '../components/undoToast.jsx';
+import SortSelect from '../components/sortSelect.jsx';
 
 export default function TaskDashboard() {
   const {
@@ -13,10 +16,18 @@ export default function TaskDashboard() {
     setSearch,
     filter,
     setFilter,
+    sort,
+    setSort,
+    page,
+    totalPages,
+    totalTasks,
+    setPage,
     addTask,
     editTask,
     toggleTask,
     removeTask,
+    undoToast,
+    undoDelete,
   } = useTasks();
 
   return (
@@ -28,6 +39,7 @@ export default function TaskDashboard() {
       <div className="toolbar">
         <SearchBar value={search} onChange={setSearch} />
         <FilterTabs value={filter} onChange={setFilter} />
+        <SortSelect value={sort} onChange={setSort} />
       </div>
 
       {error && <p className="error">{error}</p>}
@@ -35,8 +47,18 @@ export default function TaskDashboard() {
       {loading ? (
         <p className="loading">Loading tasks...</p>
       ) : (
-        <TaskList tasks={tasks} onToggle={toggleTask} onEdit={editTask} onDelete={removeTask} />
+        <>
+          <TaskList tasks={tasks} onToggle={toggleTask} onEdit={editTask} onDelete={removeTask} />
+          <Pagination
+            currentPage={page}
+            totalPages={totalPages}
+            totalTasks={totalTasks}
+            onPageChange={setPage}
+          />
+        </>
       )}
+
+      <UndoToast toast={undoToast} onUndo={undoDelete} />
     </div>
   );
 }

@@ -45,6 +45,33 @@
   min-height: 64px;
 }
 
+.due-date-picker,
+.sort-select {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.due-date-picker input,
+.sort-select select {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3);
+  font-family: inherit;
+  color: var(--color-text);
+  background: var(--color-bg);
+  transition: border-color var(--transition);
+}
+
+.due-date-picker input:focus,
+.sort-select select:focus {
+  border-color: var(--color-accent);
+}
+
 .task-form button {
   align-self: flex-start;
   background: var(--color-accent);
@@ -168,6 +195,11 @@
   border-color: #bbf7d0;
 }
 
+.task-item.overdue {
+  border-color: rgba(220, 38, 38, 0.45);
+  background: #fff5f5;
+}
+
 .task-item input[type='checkbox'] {
   margin-top: 4px;
   width: 18px;
@@ -200,6 +232,17 @@
   word-break: break-word;
 }
 
+.task-due-date {
+  margin-top: var(--space-1);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.task-due-date.overdue {
+  color: var(--color-danger);
+}
+
 .task-actions {
   display: flex;
   gap: var(--space-3);
@@ -221,6 +264,126 @@
 
 .task-actions button:last-child:hover {
   color: var(--color-danger);
+}
+
+/* ---- Undo toast ---- */
+.undo-toast {
+  position: fixed;
+  right: var(--space-5);
+  bottom: var(--space-5);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  max-width: min(92vw, 420px);
+  padding: var(--space-4) var(--space-5);
+  background: #111827;
+  color: #f9fafb;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  z-index: 40;
+  animation: toast-enter 180ms ease-out;
+}
+
+.undo-toast p {
+  margin: 0;
+}
+
+.undo-toast-title {
+  font-weight: 700;
+}
+
+.undo-toast-message {
+  color: rgba(249, 250, 251, 0.78);
+  font-size: 0.9rem;
+}
+
+.undo-toast button {
+  flex-shrink: 0;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: #ffffff;
+  color: #111827;
+  font-weight: 700;
+  padding: var(--space-2) var(--space-4);
+}
+
+.undo-toast button:hover {
+  background: var(--color-accent-soft);
+}
+
+@keyframes toast-enter {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ---- Pagination ---- */
+.pagination {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+  padding: var(--space-4);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.72));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.pagination-summary {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.pagination-button,
+.pagination-pages button {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-radius: var(--radius-pill);
+  padding: var(--space-2) var(--space-4);
+  font-weight: 600;
+  transition: background var(--transition), border-color var(--transition), color var(--transition);
+}
+
+.pagination-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-pages {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.pagination-pages button.active {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
+}
+
+.pagination-pages button:not(.active):hover,
+.pagination-button:not(:disabled):hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
 }
 
 /* ---- Inline edit mode ---- */
@@ -330,5 +493,28 @@
 
   .filter-tabs {
     justify-content: center;
+  }
+
+  .pagination-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pagination-button,
+  .pagination-pages button {
+    width: 100%;
+  }
+
+  .undo-toast {
+    left: var(--space-3);
+    right: var(--space-3);
+    bottom: var(--space-3);
+    max-width: none;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .undo-toast button {
+    width: 100%;
   }
 }

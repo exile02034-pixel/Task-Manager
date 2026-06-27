@@ -11,5 +11,6 @@ router.post('/', createTaskRules, validateRequest, taskController.createTask);
 router.put('/:id', updateTaskRules, validateRequest, taskController.updateTask);
 router.patch('/:id/toggle', taskController.toggleTask);
 router.delete('/:id', taskController.deleteTask);
+router.post('/:id/undo-delete', taskController.undoDeleteTask);
 
 export default router;

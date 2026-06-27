@@ -4,8 +4,10 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
 });
 
-export const getTasks = async ({ search, status }) => {
-  const { data } = await api.get('/tasks', { params: { search, status } });
+export const getTasks = async ({ search, status, page = 1, limit = 5, sortBy, sortOrder }) => {
+  const { data } = await api.get('/tasks', {
+    params: { search, status, page, limit, sortBy, sortOrder },
+  });
   return data.data;
 };
 
@@ -26,5 +28,10 @@ export const toggleTask = async (id, payload) => {
 
 export const deleteTask = async (id) => {
   const { data } = await api.delete(`/tasks/${id}`);
+  return data.data;
+};
+
+export const undoDeleteTask = async (id) => {
+  const { data } = await api.post(`/tasks/${id}/undo-delete`);
   return data.data;
 };

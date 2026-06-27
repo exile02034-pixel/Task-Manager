@@ -14,9 +14,17 @@ const taskModel = new mongoose.Schema({
       maxlength: [500, 'Description cannot exceed 500 characters'],
       default: '',
     },
+    dueDate: {
+      type: Date,
+      default: null,
+    },
     isCompleted: {
       type: Boolean,
       default: false,
+    },
+    pendingDeletionExpiresAt: {
+      type: Date,
+      default: null,
     },
   },
   { timestamps: true }

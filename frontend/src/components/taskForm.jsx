@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import DueDatePicker from './dueDatePicker.jsx';
 
 export default function TaskForm({ onSubmit }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [dueDate, setDueDate] = useState('');
   const [formError, setFormError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -17,9 +19,14 @@ export default function TaskForm({ onSubmit }) {
     setFormError('');
     setSubmitting(true);
     try {
-      await onSubmit({ title: title.trim(), description: description.trim() });
+      await onSubmit({
+        title: title.trim(),
+        description: description.trim(),
+        dueDate: dueDate || null,
+      });
       setTitle('');
       setDescription('');
+      setDueDate('');
     } catch (err) {
       setFormError(err.response?.data?.message || 'Failed to create task');
     } finally {
@@ -42,6 +49,7 @@ export default function TaskForm({ onSubmit }) {
         onChange={(e) => setDescription(e.target.value)}
         maxLength={500}
       />
+      <DueDatePicker id="create-task-due-date" value={dueDate} onChange={setDueDate} />
       {formError && <p className="form-error">{formError}</p>}
       <button type="submit" disabled={submitting}>
         {submitting ? 'Adding...' : 'Add Task'}

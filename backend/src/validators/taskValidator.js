@@ -15,6 +15,11 @@ export const createTaskRules = [
     .trim()
     .isLength({ max: 500 })
     .withMessage('Description cannot exceed 500 characters'),
+  body('dueDate')
+    .optional({ nullable: true, checkFalsy: true })
+    .isISO8601({ strict: true, strictSeparator: true })
+    .withMessage('Due date must be a valid date')
+    .toDate(),
 ];
 
 export const updateTaskRules = createTaskRules;
